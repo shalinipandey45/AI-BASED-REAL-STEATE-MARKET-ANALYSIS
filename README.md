@@ -1,2 +1,2 @@
-# AI-BASED-REAL-STEATE-MARKET-ANALYSIS
-TO MARKET CHECK ANALYSIS PRICE
+# -AI-Based-real-state-market-Analysis
+you can every property check the price of real state 

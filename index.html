@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Real Estate Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-building-circle-check"></i>
+            <span>EstateAI Pro</span>
+        </div>
+        <nav>
+            <ul>
+                <li class="active" onclick="showSection('analysis')"><i class="fa-solid fa-chart-line"></i> Market
+                    Analysis</li>
+                <li onclick="showSection('transaction')"><i class="fa-solid fa-house-chimney-window"></i> Buy/Sell
+                    Property</li>
+                <li onclick="showSection('contact')"><i class="fa-solid fa-headset"></i> Contact Details</li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div id="auth-overlay" class="auth-container">
+            <div class="auth-split-card">
+                <div class="auth-sidebar">
+                    <div class="auth-logo">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>EstateAI <small>Enterprise</small></span>
+                    </div>
+                    <div class="auth-welcome">
+                        <h2>Precision Data. <br>Smarter Decisions.</h2>
+                        <p>Access the global real estate valuation terminal used by top-tier firms.</p>
+                    </div>
+                </div>
+
+                <div class="auth-content">
+                    <div class="auth-tabs">
+                        <button id="tab-login" class="active" onclick="switchAuth('login')">Sign In</button>
+                        <button id="tab-register" onclick="switchAuth('register')">Create Account</button>
+                    </div>
+
+                    <div id="login-form" class="auth-form active">
+                        <h3>Member Login</h3>
+                        <div class="input-group">
+                            <label>Corporate Email</label>
+                            <input type="email" id="log-email" placeholder="name@company.com">
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="log-pass" placeholder="••••••••">
+                        </div>
+                        <div id="login-error" class="error-text"></div>
+                        <button class="btn-auth" onclick="handleLogin()">Access Terminal</button>
+                    </div>
+
+                    <div id="register-form" class="auth-form">
+                        <h3>Register Firm</h3>
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="reg-name" placeholder="John Doe">
+                        </div>
+                        <div class="input-group">
+                            <label>Work Email</label>
+                            <input type="email" id="reg-email" placeholder="name@company.com">
+                        </div>
+                        <div class="input-group">
+                            <label>Set Password</label>
+                            <input type="password" id="reg-pass" placeholder="Min. 8 characters">
+                        </div>
+                        <button class="btn-auth" onclick="handleRegister()">Complete Registration</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-dashboard" style="display: none;">
+        </div>
+
+        <header>
+            <h1>Real Estate Intelligence Dashboard</h1>
+            <p>Welcome, Portfolio Manager Shalini  </p>
+        </header>
+
+        <section id="analysis" class="content-section active">
+            <div class="grid-container">
+                <div class="card">
+                    <h2>Property Valuation</h2>
+                    <label>Location (City, State, or Country)</label>
+                    <input type="text" id="location" placeholder="e.g. New York, Mumbai, Tokyo..."
+                        oninput="suggestMarket()">
+
+                    <div id="market-status" style="font-size: 12px; margin-top: 5px; color: #64748b;">
+                        Market: <span id="market-type">Global Standard</span>
+                    </div>
+                    <label>Area (sq ft)</label>
+                    <input type="number" id="area" placeholder="e.g. 1200">
+                    <label>Rooms</label>
+                    <input type="number" id="rooms" placeholder="e.g. 3">
+                    <label>Age (Years)</label>
+                    <input type="number" id="age" placeholder="e.g. 5">
+                    <button class="btn-primary" onclick="calculatePrice()">Estimate Price</button>
+                    <h3 id="result" class="valuation-output"></h3>
+                </div>
+                <div class="card">
+                    <h2>Market Trend Analysis</h2>
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="transaction" class="content-section">
+            <div class="card full-width">
+                <h2>Transaction Desk</h2>
+                <p>Based on your current valuation, choose an action:</p>
+                <div class="action-box">
+                    <div class="action-box">
+                        <div class="action-card">
+                            <i class="fa-solid fa-tag"></i>
+                            <h3>Sell Property</h3>
+                            <p>List your property at the AI-suggested price.</p>
+                            <div id="sellPreview" class="img-preview"></div> <button class="btn-sell" id="sellBtn">List
+                                for Sale</button>
+                            <div id="sellResult"></div>
+                        </div>
+
+                        <div class="action-card">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <h3>Buy Property</h3>
+                            <p>Find assets with similar ROI potential.</p>
+                            <div id="buyPreview" class="img-preview"></div> <button class="btn-buy" id="buyBtn">Browse
+                                Listings</button>
+                            <div id="buyResult"></div>
+                        </div>
+                    </div>
+
+                    <input type="file" id="propertyImage" accept="image/*" style="display: none;">
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section">
+            <div class="contact-grid">
+
+                <div class="card contact-profile">
+                    <div class="profile-frame">
+                        <img src="bhadeli.jpeg" alt="Representative">
+                        <span class="pulse-online"></span>
+                    </div>
+                    <h3>Shalini Pandey</h3>
+                    <p class="role">Regional Director — Shalini</p>
+
+                    <div class="office-details">
+                        <p><i class="fa-solid fa-building"></i> BKC, G-Block, Mumbai</p>
+                        <p><i class="fa-solid fa-clock"></i> 09:00 AM - 07:00 PM IST</p>
+                    </div>
+                </div>
+
+                <div class="card contact-actions">
+                    <h2>Direct Concierge</h2>
+                    <p>Select your preferred channel for instant property analysis support.</p>
+
+                    <div class="action-buttons">
+                        <button class="btn-wa" onclick="contactWhatsApp()">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span>Official WhatsApp</span>
+                        </button>
+
+                        <button class="btn-ig" onclick="contactInstagram()">
+                            <i class="fa-brands fa-instagram"></i>
+                            <span>Official Instagram</span>
+                        </button>
+                    </div>
+
+                    <div class="support-footer">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Secure End-to-End Encryption Enabled</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
